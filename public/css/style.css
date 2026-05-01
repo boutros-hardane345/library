@@ -6,31 +6,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
 
 :root {
-  --bg-base:       #0f0e0d;
-  --bg-surface:    #1a1916;
-  --bg-card:       #222018;
-  --bg-hover:      #2a2825;
-  --border:        #333128;
-  --border-light:  #443f38;
-  --text-primary:  #f0ead6;
-  --text-secondary:#9e9580;
-  --text-muted:    #5c5849;
-  --accent:        #c9a84c;
-  --accent-dim:    #8a6e2f;
-  --accent-glow:   rgba(201,168,76,0.15);
+  --bg-base:       #f4f1eb;
+  --bg-surface:    #faf8f3;
+  --bg-card:       #ffffff;
+  --bg-hover:      #ede9df;
+  --border:        #ddd8cc;
+  --border-light:  #c9c3b5;
+  --text-primary:  #1a1714;
+  --text-secondary:#4a4540;
+  --text-muted:    #8a8278;
+  --accent:        #8b5e3c;
+  --accent-dim:    #c4956a;
+  --accent-glow:   rgba(139,94,60,0.12);
   --danger:        #c0392b;
-  --danger-dim:    rgba(192,57,43,0.15);
+  --danger-dim:    rgba(192,57,43,0.10);
   --success:       #27ae60;
-  --success-dim:   rgba(39,174,96,0.15);
+  --success-dim:   rgba(39,174,96,0.10);
   --warning:       #e67e22;
-  --warning-dim:   rgba(230,126,34,0.15);
+  --warning-dim:   rgba(230,126,34,0.10);
   --info:          #2980b9;
-  --info-dim:      rgba(41,128,185,0.15);
+  --info-dim:      rgba(41,128,185,0.10);
   --sidebar-w:     260px;
   --radius:        8px;
   --radius-lg:     12px;
-  --shadow:        0 2px 12px rgba(0,0,0,0.4);
-  --shadow-lg:     0 8px 32px rgba(0,0,0,0.6);
+  --shadow:        0 2px 12px rgba(0,0,0,0.08);
+  --shadow-lg:     0 8px 32px rgba(0,0,0,0.12);
   --transition:    0.2s ease;
 }
 
