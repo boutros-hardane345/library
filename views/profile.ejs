@@ -1,0 +1,45 @@
+<%- include('./partials/head') %>
+<%- include('./partials/sidebar') %>
+<div class="main">
+  <header class="topbar">
+    <div class="flex items-center gap-2">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <span class="topbar-title">My Profile</span>
+    </div>
+  </header>
+  <div class="content">
+    <div class="card" style="max-width:500px">
+      <div class="card-header"><span class="card-title">Account Info</span></div>
+      <div class="detail-grid" style="grid-template-columns:1fr;margin-bottom:24px">
+        <div class="detail-item"><label>Name</label><p><%= currentUser.name %></p></div>
+        <div class="detail-item"><label>Email</label><p><%= currentUser.email %></p></div>
+        <div class="detail-item"><label>Role</label><p><span class="badge badge-info"><%= currentUser.role %></span></p></div>
+      </div>
+
+      <div class="card-header"><span class="card-title">Change Password</span></div>
+      <% if (error) { %><div class="alert alert-error" style="margin-top:16px"><%= error %></div><% } %>
+      <% if (success) { %><div class="alert alert-success" style="margin-top:16px"><%= success %></div><% } %>
+
+      <form action="/profile/change-password" method="POST" style="margin-top:16px">
+        <div class="form-grid" style="grid-template-columns:1fr">
+          <div class="form-group">
+            <label>Current Password</label>
+            <input type="password" name="currentPassword" placeholder="••••••••" required>
+          </div>
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password" name="newPassword" placeholder="Min 6 characters" required>
+          </div>
+          <div class="form-group">
+            <label>Confirm New Password</label>
+            <input type="password" name="confirmPassword" placeholder="••••••••" required>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<%- include('./partials/footer') %>

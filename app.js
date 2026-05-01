@@ -12,7 +12,7 @@ const bookRoutes      = require('./routes/books');
 const authorRoutes    = require('./routes/authors');
 const memberRoutes    = require('./routes/members');
 const loanRoutes      = require('./routes/loans');
-
+const profileRoutes = require('./routes/profile');
 const app = express();
 
 // Connect to MongoDB
@@ -29,6 +29,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(methodOverride('_method'));
 app.use(setCurrentUser);
+app.use('/profile', profileRoutes);
 
 // Routes
 app.get('/', (req, res) => res.redirect('/dashboard'));
