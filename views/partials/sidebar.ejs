@@ -7,26 +7,26 @@
   <nav class="sidebar-nav">
     <div class="nav-section">Main</div>
     <a href="/dashboard" class="nav-item <%= title === 'Dashboard' ? 'active' : '' %>">
-      <span class="nav-icon">◈</span> Dashboard
+       Dashboard
     </a>
     <a href="/profile" class="nav-item <%= title === 'My Profile' ? 'active' : '' %>">
-  <span class="nav-icon">👤</span> My Profile
+  My Profile
 </a>
     <div class="nav-section">Catalogue</div>
     <a href="/books" class="nav-item <%= title === 'Books' ? 'active' : '' %>">
-      <span class="nav-icon">📚</span> Books
+       Books
     </a>
     <a href="/authors" class="nav-item <%= title === 'Authors' ? 'active' : '' %>">
-      <span class="nav-icon">✍</span> Authors
+      Authors
     </a>
 
     <% if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'librarian')) { %>
     <div class="nav-section">Operations</div>
     <a href="/loans" class="nav-item <%= title === 'Loans' ? 'active' : '' %>">
-      <span class="nav-icon">↕</span> Loans
+      Loans
     </a>
     <a href="/members" class="nav-item <%= title === 'Members' ? 'active' : '' %>">
-      <span class="nav-icon">👥</span> Members
+     Members
     </a>
     <% } %>
   </nav>
