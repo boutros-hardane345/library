@@ -1,0 +1,45 @@
+<%- include('../partials/head') %>
+<%- include('../partials/sidebar') %>
+<div class="main">
+  <header class="topbar">
+    <div class="flex items-center gap-2">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <span class="topbar-title">Members</span>
+    </div>
+    <% if (currentUser && currentUser.role === 'admin') { %>
+      <a href="/members/new" class="btn btn-primary btn-sm">+ Add Member</a>
+    <% } %>
+  </header>
+  <div class="content">
+    <div class="card">
+      <% if (members.length === 0) { %>
+        <div class="empty-state"><div class="empty-icon">👥</div><p>No members yet.</p></div>
+      <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Type</th><th>Status</th><th>Joined</th><th></th></tr></thead>
+          <tbody>
+            <% members.forEach(m => { %>
+            <tr>
+              <td><span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--accent)"><%= m.membershipId %></span></td>
+              <td><%= m.user ? m.user.name : '—' %></td>
+              <td><%= m.user ? m.user.email : '—' %></td>
+              <td><span class="badge badge-info"><%= m.membershipType %></span></td>
+              <td><span class="badge <%= m.isActive ? 'badge-success' : 'badge-neutral' %>"><%= m.isActive ? 'Active' : 'Inactive' %></span></td>
+              <td><%= m.joinDate ? new Date(m.joinDate).toLocaleDateString() : '—' %></td>
+              <td>
+                <div class="flex gap-2">
+                  <a href="/members/<%= m._id %>" class="btn btn-ghost btn-sm">View</a>
+                  <a href="/members/<%= m._id %>/edit" class="btn btn-ghost btn-sm">Edit</a>
+                </div>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

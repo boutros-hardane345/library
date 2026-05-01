@@ -1,0 +1,82 @@
+<%- include('../partials/head') %>
+<%- include('../partials/sidebar') %>
+<div class="main">
+  <header class="topbar">
+    <div class="flex items-center gap-2">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <span class="topbar-title">Dashboard</span>
+    </div>
+    <div class="topbar-actions">
+      <% if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'librarian')) { %>
+        <a href="/loans/new" class="btn btn-primary btn-sm">+ New Loan</a>
+      <% } %>
+    </div>
+  </header>
+  <div class="content">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📚</div>
+        <div class="stat-value"><%= stats.totalBooks %></div>
+        <div class="stat-label">Total Books</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✍</div>
+        <div class="stat-value"><%= stats.totalAuthors %></div>
+        <div class="stat-label">Authors</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-value"><%= stats.totalMembers %></div>
+        <div class="stat-label">Members</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">↕</div>
+        <div class="stat-value"><%= stats.activeLoans %></div>
+        <div class="stat-label">Active Loans</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⚠</div>
+        <div class="stat-value" style="color:#e74c3c"><%= stats.overdueLoans %></div>
+        <div class="stat-label">Overdue</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Recent Loans</span>
+        <% if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'librarian')) { %>
+          <a href="/loans" class="btn btn-ghost btn-sm">View All</a>
+        <% } %>
+      </div>
+      <div class="table-wrap">
+        <% if (recentLoans.length === 0) { %>
+          <div class="empty-state">
+            <div class="empty-icon">↕</div>
+            <p>No loans yet.</p>
+          </div>
+        <% } else { %>
+        <table>
+          <thead>
+            <tr><th>Member</th><th>Book</th><th>Due Date</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <% recentLoans.forEach(loan => { %>
+            <tr>
+              <td><%= loan.member && loan.member.user ? loan.member.user.name : '—' %></td>
+              <td><%= loan.book ? loan.book.title : '—' %></td>
+              <td><%= loan.dueDate ? new Date(loan.dueDate).toLocaleDateString() : '—' %></td>
+              <td>
+                <span class="badge <%= loan.status === 'active' ? 'badge-success' : loan.status === 'overdue' ? 'badge-danger' : 'badge-neutral' %>">
+                  <%= loan.status %>
+                </span>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

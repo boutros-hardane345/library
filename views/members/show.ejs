@@ -1,0 +1,56 @@
+<%- include('../partials/head') %>
+<%- include('../partials/sidebar') %>
+<div class="main">
+  <header class="topbar">
+    <div class="flex items-center gap-2">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <span class="topbar-title"><%= member.membershipId %></span>
+    </div>
+    <div class="topbar-actions">
+      <a href="/members/<%= member._id %>/edit" class="btn btn-ghost btn-sm">Edit</a>
+      <% if (currentUser && currentUser.role === 'admin') { %>
+        <form action="/members/<%= member._id %>?_method=DELETE" method="POST" style="display:inline" onsubmit="return confirm('Delete this member?')">
+          <button class="btn btn-danger btn-sm">Delete</button>
+        </form>
+      <% } %>
+      <a href="/members" class="btn btn-ghost btn-sm">← Back</a>
+    </div>
+  </header>
+  <div class="content">
+    <% if (typeof error !== 'undefined' && error) { %><div class="alert alert-error"><%= error %></div><% } %>
+    <div class="grid-2" style="gap:20px;align-items:start">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Member Info</span></div>
+        <div class="detail-grid" style="grid-template-columns:1fr">
+          <div class="detail-item"><label>Name</label><p><%= member.user ? member.user.name : '—' %></p></div>
+          <div class="detail-item"><label>Email</label><p><%= member.user ? member.user.email : '—' %></p></div>
+          <div class="detail-item"><label>Membership Type</label><p><span class="badge badge-info"><%= member.membershipType %></span></p></div>
+          <div class="detail-item"><label>Status</label><p><span class="badge <%= member.isActive ? 'badge-success' : 'badge-neutral' %>"><%= member.isActive ? 'Active' : 'Inactive' %></span></p></div>
+          <div class="detail-item"><label>Phone</label><p><%= member.phone || '—' %></p></div>
+          <div class="detail-item"><label>Joined</label><p><%= member.joinDate ? new Date(member.joinDate).toLocaleDateString() : '—' %></p></div>
+          <div class="detail-item"><label>Address</label><p><%= member.address || '—' %></p></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Loan History (<%= loans.length %>)</span>
+          <a href="/loans/new" class="btn btn-ghost btn-sm">+ New Loan</a>
+        </div>
+        <% if (loans.length === 0) { %>
+          <p class="text-muted" style="font-size:13px">No loans for this member.</p>
+        <% } else { %>
+          <% loans.forEach(loan => { %>
+          <div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <a href="/loans/<%= loan._id %>" style="color:var(--accent);text-decoration:none;font-weight:500;font-size:13px"><%= loan.book ? loan.book.title : '—' %></a>
+              <div style="font-size:12px;color:var(--text-muted)">Due: <%= loan.dueDate ? new Date(loan.dueDate).toLocaleDateString() : '—' %></div>
+            </div>
+            <span class="badge <%= loan.status === 'active' ? 'badge-success' : loan.status === 'overdue' ? 'badge-danger' : 'badge-neutral' %>"><%= loan.status %></span>
+          </div>
+          <% }) %>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

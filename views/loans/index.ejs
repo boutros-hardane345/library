@@ -1,0 +1,58 @@
+<%- include('../partials/head') %>
+<%- include('../partials/sidebar') %>
+<div class="main">
+  <header class="topbar">
+    <div class="flex items-center gap-2">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <span class="topbar-title">Loans</span>
+    </div>
+    <a href="/loans/new" class="btn btn-primary btn-sm">+ Issue Loan</a>
+  </header>
+  <div class="content">
+    <div class="card mb-4" style="padding:12px 20px">
+      <div class="flex gap-2">
+        <a href="/loans" class="btn btn-sm <%= !status ? 'btn-primary' : 'btn-ghost' %>">All</a>
+        <a href="/loans?status=active"   class="btn btn-sm <%= status === 'active'   ? 'btn-primary' : 'btn-ghost' %>">Active</a>
+        <a href="/loans?status=overdue"  class="btn btn-sm <%= status === 'overdue'  ? 'btn-primary' : 'btn-ghost' %>">Overdue</a>
+        <a href="/loans?status=returned" class="btn btn-sm <%= status === 'returned' ? 'btn-primary' : 'btn-ghost' %>">Returned</a>
+      </div>
+    </div>
+    <div class="card">
+      <% if (loans.length === 0) { %>
+        <div class="empty-state">
+          <div class="empty-icon">↕</div>
+          <p>No loans found.</p>
+          <a href="/loans/new" class="btn btn-primary">Issue First Loan</a>
+        </div>
+      <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Book</th><th>Loan Date</th><th>Due Date</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            <% loans.forEach(loan => { %>
+            <tr>
+              <td><%= loan.member && loan.member.user ? loan.member.user.name : '—' %></td>
+              <td><%= loan.book ? loan.book.title : '—' %></td>
+              <td><%= loan.loanDate ? new Date(loan.loanDate).toLocaleDateString() : '—' %></td>
+              <td><%= loan.dueDate  ? new Date(loan.dueDate).toLocaleDateString()  : '—' %></td>
+              <td><span class="badge <%= loan.status === 'active' ? 'badge-success' : loan.status === 'overdue' ? 'badge-danger' : 'badge-neutral' %>"><%= loan.status %></span></td>
+              <td>
+                <div class="flex gap-2">
+                  <a href="/loans/<%= loan._id %>" class="btn btn-ghost btn-sm">View</a>
+                  <% if (loan.status !== 'returned') { %>
+                    <form action="/loans/<%= loan._id %>/return" method="POST" style="display:inline">
+                      <button class="btn btn-success btn-sm">Return</button>
+                    </form>
+                  <% } %>
+                </div>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

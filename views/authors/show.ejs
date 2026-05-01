@@ -1,0 +1,57 @@
+<%- include('../partials/head') %>
+<%- include('../partials/sidebar') %>
+<div class="main">
+  <header class="topbar">
+    <div class="flex items-center gap-2">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <span class="topbar-title"><%= author.name %></span>
+    </div>
+    <div class="topbar-actions">
+      <% if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'librarian')) { %>
+        <a href="/authors/<%= author._id %>/edit" class="btn btn-ghost btn-sm">Edit</a>
+        <form action="/authors/<%= author._id %>?_method=DELETE" method="POST" style="display:inline" onsubmit="return confirm('Delete this author?')">
+          <button class="btn btn-danger btn-sm">Delete</button>
+        </form>
+      <% } %>
+      <a href="/authors" class="btn btn-ghost btn-sm">← Back</a>
+    </div>
+  </header>
+  <div class="content">
+    <% if (typeof error !== 'undefined' && error) { %><div class="alert alert-error"><%= error %></div><% } %>
+    <div class="grid-2" style="gap:20px;align-items:start">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Author Details</span></div>
+        <div class="detail-grid" style="grid-template-columns:1fr">
+          <div class="detail-item"><label>Nationality</label><p><%= author.nationality || '—' %></p></div>
+          <div class="detail-item"><label>Birth Year</label><p><%= author.birthYear || '—' %></p></div>
+          <div class="detail-item"><label>Email</label><p><%= author.email || '—' %></p></div>
+          <div class="detail-item"><label>Biography</label><p style="color:var(--text-secondary)"><%= author.bio || '—' %></p></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Books (<%= books.length %>)</span>
+          <% if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'librarian')) { %>
+            <a href="/books/new" class="btn btn-ghost btn-sm">+ Add Book</a>
+          <% } %>
+        </div>
+        <% if (books.length === 0) { %>
+          <p class="text-muted" style="font-size:13px">No books by this author yet.</p>
+        <% } else { %>
+          <% books.forEach(book => { %>
+          <div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <a href="/books/<%= book._id %>" style="color:var(--accent);text-decoration:none;font-weight:500"><%= book.title %></a>
+              <div style="font-size:12px;color:var(--text-muted)"><%= book.genre %> · <%= book.publishedYear || 'n.d.' %></div>
+            </div>
+            <span class="badge <%= book.availableCopies > 0 ? 'badge-success' : 'badge-danger' %>">
+              <%= book.availableCopies %>/<%= book.totalCopies %>
+            </span>
+          </div>
+          <% }) %>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,58 @@
+<%- include('../partials/head') %>
+<%- include('../partials/sidebar') %>
+<div class="main">
+  <header class="topbar">
+    <div class="flex items-center gap-2">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <span class="topbar-title">Books</span>
+    </div>
+    <% if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'librarian')) { %>
+      <a href="/books/new" class="btn btn-primary btn-sm">+ Add Book</a>
+    <% } %>
+  </header>
+  <div class="content">
+    <div class="card mb-4" style="padding:16px 24px">
+      <form class="search-bar" method="GET" action="/books">
+        <input type="text" name="search" placeholder="Search by title…" value="<%= search || '' %>">
+        <select name="genre">
+          <option value="">All Genres</option>
+          <% ['Fiction','Non-Fiction','Science','History','Biography','Technology','Philosophy','Literature','Mystery','Other'].forEach(g => { %>
+            <option value="<%= g %>" <%= genre === g ? 'selected' : '' %>><%= g %></option>
+          <% }) %>
+        </select>
+        <button class="btn btn-ghost btn-sm" type="submit">Filter</button>
+        <a href="/books" class="btn btn-ghost btn-sm">Clear</a>
+      </form>
+    </div>
+    <% if (books.length === 0) { %>
+      <div class="card">
+        <div class="empty-state">
+          <div class="empty-icon">📚</div>
+          <p>No books found.</p>
+          <% if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'librarian')) { %>
+            <a href="/books/new" class="btn btn-primary">Add First Book</a>
+          <% } %>
+        </div>
+      </div>
+    <% } else { %>
+    <div class="books-grid">
+      <% books.forEach(book => { %>
+      <a href="/books/<%= book._id %>" class="book-card">
+        <div class="book-spine" style="background:<%= book.coverColor %>22;border-bottom:3px solid <%= book.coverColor %>">📖</div>
+        <div class="book-card-body">
+          <div class="book-title"><%= book.title %></div>
+          <div class="book-author"><%= book.author ? book.author.name : 'Unknown' %></div>
+          <div style="margin-top:8px;display:flex;align-items:center;justify-content:space-between">
+            <span class="badge badge-info" style="font-size:10px"><%= book.genre %></span>
+            <span style="font-size:11px;color:<%= book.availableCopies > 0 ? '#2ecc71' : '#e74c3c' %>">
+              <%= book.availableCopies %>/<%= book.totalCopies %> avail.
+            </span>
+          </div>
+        </div>
+      </a>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,68 @@
+<%- include('../partials/head') %>
+<%- include('../partials/sidebar') %>
+<div class="main">
+  <header class="topbar">
+    <div class="flex items-center gap-2">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <span class="topbar-title">Loan Details</span>
+    </div>
+    <div class="topbar-actions">
+      <% if (loan.status !== 'returned') { %>
+        <form action="/loans/<%= loan._id %>/return" method="POST" style="display:inline">
+          <button class="btn btn-success btn-sm">✓ Mark Returned</button>
+        </form>
+        <a href="/loans/<%= loan._id %>/edit" class="btn btn-ghost btn-sm">Edit</a>
+      <% } %>
+      <% if (currentUser && currentUser.role === 'admin') { %>
+        <form action="/loans/<%= loan._id %>?_method=DELETE" method="POST" style="display:inline" onsubmit="return confirm('Delete this loan?')">
+          <button class="btn btn-danger btn-sm">Delete</button>
+        </form>
+      <% } %>
+      <a href="/loans" class="btn btn-ghost btn-sm">← Back</a>
+    </div>
+  </header>
+  <div class="content">
+    <div class="grid-2" style="gap:20px;align-items:start">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Loan Info</span>
+          <span class="badge <%= loan.status === 'active' ? 'badge-success' : loan.status === 'overdue' ? 'badge-danger' : 'badge-neutral' %>"><%= loan.status %></span>
+        </div>
+        <div class="detail-grid" style="grid-template-columns:1fr">
+          <div class="detail-item"><label>Loan Date</label><p><%= loan.loanDate ? new Date(loan.loanDate).toLocaleDateString() : '—' %></p></div>
+          <div class="detail-item">
+            <label>Due Date</label>
+            <p style="color:<%= loan.status === 'overdue' ? '#e74c3c' : 'var(--text-primary)' %>">
+              <%= loan.dueDate ? new Date(loan.dueDate).toLocaleDateString() : '—' %>
+              <% if (loan.status === 'overdue') { %> <span style="font-size:11px">(OVERDUE)</span><% } %>
+            </p>
+          </div>
+          <div class="detail-item"><label>Return Date</label><p><%= loan.returnDate ? new Date(loan.returnDate).toLocaleDateString() : '—' %></p></div>
+          <div class="detail-item"><label>Notes</label><p><%= loan.notes || '—' %></p></div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-header"><span class="card-title">Member</span></div>
+          <% if (loan.member) { %>
+          <div class="detail-grid" style="grid-template-columns:1fr">
+            <div class="detail-item"><label>Name</label><p><a href="/members/<%= loan.member._id %>" style="color:var(--accent);text-decoration:none"><%= loan.member.user ? loan.member.user.name : '—' %></a></p></div>
+            <div class="detail-item"><label>Email</label><p><%= loan.member.user ? loan.member.user.email : '—' %></p></div>
+          </div>
+          <% } %>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Book</span></div>
+          <% if (loan.book) { %>
+          <div class="detail-grid" style="grid-template-columns:1fr">
+            <div class="detail-item"><label>Title</label><p><a href="/books/<%= loan.book._id %>" style="color:var(--accent);text-decoration:none"><%= loan.book.title %></a></p></div>
+            <div class="detail-item"><label>Author</label><p><%= loan.book.author ? loan.book.author.name : '—' %></p></div>
+            <div class="detail-item"><label>Genre</label><p><span class="badge badge-info"><%= loan.book.genre %></span></p></div>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

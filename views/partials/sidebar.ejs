@@ -1,0 +1,46 @@
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <h1>LibraFlow</h1>
+    <span>Library Management</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section">Main</div>
+    <a href="/dashboard" class="nav-item <%= title === 'Dashboard' ? 'active' : '' %>">
+      <span class="nav-icon">◈</span> Dashboard
+    </a>
+
+    <div class="nav-section">Catalogue</div>
+    <a href="/books" class="nav-item <%= title === 'Books' ? 'active' : '' %>">
+      <span class="nav-icon">📚</span> Books
+    </a>
+    <a href="/authors" class="nav-item <%= title === 'Authors' ? 'active' : '' %>">
+      <span class="nav-icon">✍</span> Authors
+    </a>
+
+    <% if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'librarian')) { %>
+    <div class="nav-section">Operations</div>
+    <a href="/loans" class="nav-item <%= title === 'Loans' ? 'active' : '' %>">
+      <span class="nav-icon">↕</span> Loans
+    </a>
+    <a href="/members" class="nav-item <%= title === 'Members' ? 'active' : '' %>">
+      <span class="nav-icon">👥</span> Members
+    </a>
+    <% } %>
+  </nav>
+
+  <div class="sidebar-footer">
+    <% if (currentUser) { %>
+    <div class="user-card">
+      <div class="user-avatar"><%= currentUser.name.charAt(0).toUpperCase() %></div>
+      <div class="user-info">
+        <div class="user-name"><%= currentUser.name %></div>
+        <div class="user-role"><%= currentUser.role %></div>
+      </div>
+    </div>
+    <form action="/auth/logout" method="POST">
+      <button class="btn-logout" type="submit">⎋ Sign Out</button>
+    </form>
+    <% } %>
+  </div>
+</aside>

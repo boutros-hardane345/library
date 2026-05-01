@@ -1,0 +1,37 @@
+<%- include('../partials/head') %>
+<%- include('../partials/sidebar') %>
+<div class="main">
+  <header class="topbar">
+    <div class="flex items-center gap-2">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <span class="topbar-title">Edit Loan</span>
+    </div>
+    <a href="/loans/<%= loan._id %>" class="btn btn-ghost btn-sm">← Cancel</a>
+  </header>
+  <div class="content">
+    <div class="card" style="max-width:500px">
+      <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">
+        Editing loan for <strong style="color:var(--text-primary)"><%= loan.member && loan.member.user ? loan.member.user.name : '—' %></strong>
+        — <em><%= loan.book ? loan.book.title : '—' %></em>
+      </p>
+      <form action="/loans/<%= loan._id %>?_method=PUT" method="POST">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Due Date *</label>
+            <input type="date" name="dueDate" required value="<%= loan.dueDate ? new Date(loan.dueDate).toISOString().split('T')[0] : '' %>">
+          </div>
+          <div class="form-group full">
+            <label>Notes</label>
+            <textarea name="notes" style="min-height:70px"><%= loan.notes || '' %></textarea>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Update Loan</button>
+          <a href="/loans/<%= loan._id %>" class="btn btn-ghost">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

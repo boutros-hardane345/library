@@ -1,0 +1,65 @@
+<%- include('../partials/head') %>
+<%- include('../partials/sidebar') %>
+<div class="main">
+  <header class="topbar">
+    <div class="flex items-center gap-2">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <span class="topbar-title">Edit Book</span>
+    </div>
+    <a href="/books/<%= book._id %>" class="btn btn-ghost btn-sm">← Cancel</a>
+  </header>
+  <div class="content">
+    <div class="card" style="max-width:700px">
+      <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+      <form action="/books/<%= book._id %>?_method=PUT" method="POST">
+        <div class="form-grid">
+          <div class="form-group full">
+            <label>Book Title *</label>
+            <input type="text" name="title" required value="<%= book.title %>">
+          </div>
+          <div class="form-group">
+            <label>Author *</label>
+            <select name="author" required>
+              <% authors.forEach(a => { %>
+                <option value="<%= a._id %>" <%= book.author && book.author.toString() === a._id.toString() ? 'selected' : '' %>><%= a.name %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Genre *</label>
+            <select name="genre" required>
+              <% ['Fiction','Non-Fiction','Science','History','Biography','Technology','Philosophy','Literature','Mystery','Other'].forEach(g => { %>
+                <option value="<%= g %>" <%= book.genre === g ? 'selected' : '' %>><%= g %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>ISBN</label>
+            <input type="text" name="isbn" value="<%= book.isbn || '' %>">
+          </div>
+          <div class="form-group">
+            <label>Published Year</label>
+            <input type="number" name="publishedYear" value="<%= book.publishedYear || '' %>" min="1000" max="2026">
+          </div>
+          <div class="form-group">
+            <label>Total Copies *</label>
+            <input type="number" name="totalCopies" value="<%= book.totalCopies %>" min="1" required>
+          </div>
+          <div class="form-group">
+            <label>Cover Color</label>
+            <input type="color" name="coverColor" value="<%= book.coverColor || '#4f46e5' %>">
+          </div>
+          <div class="form-group full">
+            <label>Description</label>
+            <textarea name="description"><%= book.description || '' %></textarea>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Update Book</button>
+          <a href="/books/<%= book._id %>" class="btn btn-ghost">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,51 @@
+<%- include('../partials/head') %>
+<%- include('../partials/sidebar') %>
+<div class="main">
+  <header class="topbar">
+    <div class="flex items-center gap-2">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <span class="topbar-title">Issue New Loan</span>
+    </div>
+    <a href="/loans" class="btn btn-ghost btn-sm">← Back</a>
+  </header>
+  <div class="content">
+    <div class="card" style="max-width:600px">
+      <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+      <form action="/loans" method="POST">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Member *</label>
+            <select name="member" required>
+              <option value="">— Select Member —</option>
+              <% members.forEach(m => { %>
+                <option value="<%= m._id %>"><%= m.user ? m.user.name : m.membershipId %> (<%= m.membershipId %>)</option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Book *</label>
+            <select name="book" required>
+              <option value="">— Select Book —</option>
+              <% books.forEach(b => { %>
+                <option value="<%= b._id %>"><%= b.title %> (<%= b.availableCopies %> avail.)</option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Due Date *</label>
+            <input type="date" name="dueDate" required min="<%= new Date().toISOString().split('T')[0] %>">
+          </div>
+          <div class="form-group full">
+            <label>Notes</label>
+            <textarea name="notes" style="min-height:70px" placeholder="Optional notes…"></textarea>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Issue Loan</button>
+          <a href="/loans" class="btn btn-ghost">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>
