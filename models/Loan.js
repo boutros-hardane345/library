@@ -35,10 +35,45 @@ const loanSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-loanSchema.pre('save', function (next) {
+// Middleware to update book availability and check for overdue status
+loanSchema.pre('save', async function (next) {
+  if (this.isNew) {
+    const book = await mongoose.model('Book').findById(this.book);
+
+    if (!book || book.availableCopies <= 0) {
+      throw new Error('No copies available');
+    }
+
+    const updatedBook = await mongoose.model('Book').findOneAndUpdate(
+  { _id: this.book, availableCopies: { $gt: 0 } },
+  { $inc: { availableCopies: -1 } },
+  { new: true }
+);
+
+if (!updatedBook) {
+  throw new Error('No copies available');
+}
+  }
+
+  // existing overdue logic
   if (this.status === 'active' && new Date() > this.dueDate) {
     this.status = 'overdue';
   }
+
+  next();
+});
+
+// Middleware to update book availability when a loan is returned
+loanSchema.pre('save', async function (next) {
+  if (this.isModified('status') && this.status === 'returned') {
+    const book = await mongoose.model('Book').findById(this.book);
+
+    if (book) {
+      book.availableCopies += 1;
+      await book.save();
+    }
+  }
+
   next();
 });
 
