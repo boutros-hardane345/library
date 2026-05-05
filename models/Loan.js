@@ -1,41 +1,46 @@
-loanSchema.pre('save', async function (next) {
-  try {
-    if (this.isNew) {
+// Loan.js
+const mongoose = require('mongoose');
 
-      // Prevent duplicate active loan
-      const existingLoan = await mongoose.model('Loan').findOne({
-        member: this.member,
-        book: this.book,
-        status: { $in: ['active', 'overdue'] }
-      });
-
-      if (existingLoan) {
-        return next(new Error('Member already has this book and has not returned it.'));
-      }
-
-      // Atomic decrement (safe)
-      const updatedBook = await mongoose.model('Book').findOneAndUpdate(
-        {
-          _id: this.book,
-          availableCopies: { $gt: 0 }
-        },
-        { $inc: { availableCopies: -1 } },
-        { new: true }
-      );
-
-      if (!updatedBook) {
-        return next(new Error('No copies available'));
-      }
-    }
-
-    // Overdue check
-    if (this.status === 'active' && new Date() > this.dueDate) {
-      this.status = 'overdue';
-    }
-
-    next();
-
-  } catch (err) {
-    next(err);
+// 1. FIRST define the schema
+const loanSchema = new mongoose.Schema({
+  // Your schema fields here
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  amount: {
+    type: Number,
+    required: true
+  },
+  interestRate: {
+    type: Number,
+    required: true
+  },
+  duration: {
+    type: Number,
+    required: true
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected', 'active', 'completed'],
+    default: 'pending'
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
 });
+
+// 2. THEN add the pre-save middleware
+loanSchema.pre('save', async function (next) {
+  // Your pre-save logic here
+  console.log('Saving loan document...');
+  // Example: Calculate something before saving
+  // this.totalPayment = this.amount * (1 + this.interestRate / 100);
+  next();
+});
+
+// 3. FINALLY create and export the model
+const Loan = mongoose.model('Loan', loanSchema);
+module.exports = Loan;
