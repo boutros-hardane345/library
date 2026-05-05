@@ -1,0 +1,12 @@
+Team members
+    - Roudy Dabboul : 
+    - Boutros Hardane : 202303434
+
+GitHub Repository:
+https://github.com/boutros-hardane345/library/
+
+Live Render URL:
+https://library-2-egsa.onrender.com
+
+MongoDB Atlas Connection String:
+mongodb+srv://librarydb:library123@cluster0.my9jjmn.mongodb.net/?appName=Cluster0
