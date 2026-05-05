@@ -1,45 +1,41 @@
-const mongoose = require('mongoose');
+loanSchema.pre('save', async function (next) {
+  try {
+    if (this.isNew) {
 
-const loanSchema = new mongoose.Schema({
-  member: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Member',
-    required: [true, 'Member is required']
-  },
-  book: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Book',
-    required: [true, 'Book is required']
-  },
-  loanDate: {
-    type: Date,
-    default: Date.now
-  },
-  dueDate: {
-    type: Date,
-    required: [true, 'Due date is required']
-  },
-  returnDate: {
-    type: Date,
-    default: null
-  },
-  status: {
-    type: String,
-    enum: ['active', 'returned', 'overdue'],
-    default: 'active'
-  },
-  notes: {
-    type: String,
-    trim: true,
-    maxlength: [500, 'Notes cannot exceed 500 characters']
-  }
-}, { timestamps: true });
+      // Prevent duplicate active loan
+      const existingLoan = await mongoose.model('Loan').findOne({
+        member: this.member,
+        book: this.book,
+        status: { $in: ['active', 'overdue'] }
+      });
 
-loanSchema.pre('save', function (next) {
-  if (this.status === 'active' && new Date() > this.dueDate) {
-    this.status = 'overdue';
+      if (existingLoan) {
+        return next(new Error('Member already has this book and has not returned it.'));
+      }
+
+      // Atomic decrement (safe)
+      const updatedBook = await mongoose.model('Book').findOneAndUpdate(
+        {
+          _id: this.book,
+          availableCopies: { $gt: 0 }
+        },
+        { $inc: { availableCopies: -1 } },
+        { new: true }
+      );
+
+      if (!updatedBook) {
+        return next(new Error('No copies available'));
+      }
+    }
+
+    // Overdue check
+    if (this.status === 'active' && new Date() > this.dueDate) {
+      this.status = 'overdue';
+    }
+
+    next();
+
+  } catch (err) {
+    next(err);
   }
-  next();
 });
-
-module.exports = mongoose.model('Loan', loanSchema);

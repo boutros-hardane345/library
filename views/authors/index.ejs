@@ -13,8 +13,7 @@
   <div class="content">
     <div class="card">
       <% if (authors.length === 0) { %>
-        <div class="empty-state">
-          <div class="empty-icon">✍</div>
+        <div class="empty-state"></div>
           <p>No authors yet.</p>
           <% if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'librarian')) { %>
             <a href="/authors/new" class="btn btn-primary">Add First Author</a>
