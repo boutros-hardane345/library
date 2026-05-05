@@ -1,46 +1,37 @@
-// Loan.js
 const mongoose = require('mongoose');
 
-// 1. FIRST define the schema
 const loanSchema = new mongoose.Schema({
-  // Your schema fields here
-  user: {
+  member: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Member',
     required: true
   },
-  amount: {
-    type: Number,
+  book: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Book',
     required: true
   },
-  interestRate: {
-    type: Number,
+  loanDate: {
+    type: Date,
+    default: Date.now
+  },
+  dueDate: {
+    type: Date,
     required: true
   },
-  duration: {
-    type: Number,
-    required: true
+  returnDate: {
+    type: Date
   },
   status: {
     type: String,
-    enum: ['pending', 'approved', 'rejected', 'active', 'completed'],
-    default: 'pending'
+    enum: ['active', 'overdue', 'returned'],
+    default: 'active'
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  notes: {
+    type: String,
+    trim: true,
+    maxlength: 2000
   }
-});
+}, { timestamps: true });
 
-// 2. THEN add the pre-save middleware
-loanSchema.pre('save', async function (next) {
-  // Your pre-save logic here
-  console.log('Saving loan document...');
-  // Example: Calculate something before saving
-  // this.totalPayment = this.amount * (1 + this.interestRate / 100);
-  next();
-});
-
-// 3. FINALLY create and export the model
-const Loan = mongoose.model('Loan', loanSchema);
-module.exports = Loan;
+module.exports = mongoose.model('Loan', loanSchema);
