@@ -10,3 +10,13 @@ https://library-2-egsa.onrender.com
 
 MongoDB Atlas Connection String:
 mongodb+srv://librarydb:library123@cluster0.my9jjmn.mongodb.net/?appName=Cluster0
+
+insert new author
+
+{
+  "name": "Isaac Asimov",
+  "bio": "Science fiction author",
+  "nationality": "American",
+  "birthYear": 1920,
+  "email": "isaac.asimov@example.com"
+}

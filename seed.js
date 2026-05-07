@@ -78,7 +78,7 @@ const seed = async () => {
   console.log('✅ Created 4 loans');
 
   console.log('\n🎉 Seed complete! Login credentials:');
-  console.log('   Admin:     admin@library.com     / admin123');
+  console.log('   Admin:     admin@library.com     / usek2026');
   console.log('   Librarian: librarian@library.com / lib123');
   console.log('   Member:    john@example.com      / member123');
 

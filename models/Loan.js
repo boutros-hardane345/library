@@ -34,4 +34,17 @@ const loanSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
+// Prevent duplicate open loans for same member+book.
+// Returned loans are allowed so members can re-borrow later.
+loanSchema.index(
+  { member: 1, book: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { status: { $in: ['active', 'overdue'] } }
+  }
+);
+
+// Support common filters and dashboard queries.
+loanSchema.index({ status: 1, dueDate: 1, createdAt: -1 });
+
 module.exports = mongoose.model('Loan', loanSchema);

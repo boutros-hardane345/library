@@ -83,13 +83,21 @@ exports.create = async (req, res) => {
       throw new Error('No copies available for this book.');
     }
 
-    // ✅ 3. Create loan
-    const loan = await Loan.create({
-      member,
-      book,
-      dueDate: due,
-      notes
-    });
+    // ✅ 3. Create loan (DB index also prevents duplicates)
+    let loan;
+    try {
+      loan = await Loan.create({
+        member,
+        book,
+        dueDate: due,
+        notes
+      });
+    } catch (err) {
+      if (err && err.code === 11000) {
+        throw new Error('This member already borrowed this book.');
+      }
+      throw err;
+    }
 
     res.redirect(`/loans/${loan._id}`);
 
